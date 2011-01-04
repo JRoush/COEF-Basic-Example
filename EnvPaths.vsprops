@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="EnvPaths"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		PreprocessorDefinitions="SOLUTIONNAME=&quot;&quot;$(SolutionName)&quot;&quot;"
+	/>
+	<UserMacro
+		Name="COEFPATH"
+		Value="F:\Game Sources\Elder Scrolls IV Oblivion\My Mods\COEF"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="OBSEPATH"
+		Value="F:\Game Sources\Elder Scrolls IV Oblivion\My Mods\OBSE Source\v0019"
+		PerformEnvironmentSet="true"
+	/>
+	<UserMacro
+		Name="OBLIVIONPATH"
+		Value="F:\Installed Games\Oblivion"
+		PerformEnvironmentSet="true"
+	/>
+</VisualStudioPropertySheet>

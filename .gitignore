@@ -1,0 +1,10 @@
+# ignore files created automatically by Visual Studio
+*.ncb
+*.suo
+*.lib
+# *.vcproj*
+Debug*/
+Release*/
+
+# ignore files marked as TODO, which need further cleaning before being added to public repo
+*.TODO
