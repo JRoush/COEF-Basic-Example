@@ -1,5 +1,5 @@
 /*
-    Main unit for OBME submodules.  Handles:
+    Main unit for submodules.  Handles:
     -   Initialization (writing hooks & patches)
     -   submodule debugging log
     -   Actual code (called by hooks)
@@ -7,9 +7,10 @@
     This example plugin has two submodule DLLs - one for the CS, and one for the game.  
     This is necessary because the game and CS use slightly different definitions for many COEF classes.
     However, there is (usually) a lot of overlap between the code for the two.
-    The best all-around solution, to minimize redefinition and the hassle similar but separate VS projects,
+    The best all-around solution, to minimize redefinition and the hassle of similar but separate VS projects,
     is to use a single 'Submodule' project that compiles as the CS submodule under the 'Debug_CS' and 'Release_CS' 
     configurations, but compiles as the Game submodule under the 'Debug_Game' and 'Release_Game' configurations.
+
     IMPORTANT: this project must be compiled *twice*, once using a 'CS' configuration, and once using a 'Game'
     configuration.  One will generate a 'CS' dll, and the other a 'Game' dll. 
 */
@@ -51,7 +52,12 @@ extern "C" _declspec(dllexport) void Initialize()
 #include "API/TESForms/TESObjectREFR.h"
 #include "API/BSTypes/BSStringT.h"
 extern "C" _declspec(dllexport) void COEFBasicTest(TESObjectREFR* thisObj, const char* argA, const char* argB, const char* argC)
-{// this is a stub, just to demonstrate the conceptn
+{/*
+    This function is a stub, just to demonstrate the concept.  It uses the COEF API (note the #include statements above) to 
+    generate a description string for the passed TESObjectREF.  This would be impossible if this submodule dll was not 
+    dynamically linked to Oblivion.exe/TESConstructionSet.exe.  That's why this code must go here, in the submodule, rather than
+    in the loader.
+*/
     BSStringT desc;
     if (thisObj) thisObj->GetDebugDescription(desc);
     _DMESSAGE("Test command on <%p> '%s' w/ args A='%s' B='%s' C='%s'",thisObj,desc.c_str(),argA,argB,argC);
