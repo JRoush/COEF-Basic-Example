@@ -1,6 +1,6 @@
 /*
     Main unit for loader.  Handles:
-    -   loader debugging log
+    -   global debugging log
     -   DLL entry point
     -   OBSE plugin interface        
     -   OBSE messaging interface
@@ -19,7 +19,7 @@
 
 */
 #include "obse/PluginAPI.h"             // for interfacing with obse
-#define PLUGINVERSION 0x01000000        
+#define PLUGINVERSION 0x01000000   
 
 /*--------------------------------------------------------------------------------------------*/
 // includes & definitions for command registration
@@ -33,8 +33,8 @@ const int OPCODEBASE        = 0x5000;
 
 /*--------------------------------------------------------------------------------------------*/
 // global debugging log for the loader
-HTMLTarget      _gLogFile("Data\\obse\\plugins\\" SOLUTIONNAME "\\" SOLUTIONNAME ".Loader.log.html", SOLUTIONNAME ".Loader.Log");
-OutputLog       _gLog;
+OutputTarget*   _gLogFile = NULL;
+_declspec(dllexport) OutputLog _gLog;
 OutputLog&      gLog = _gLog;
 
 /*--------------------------------------------------------------------------------------------*/
@@ -116,8 +116,9 @@ DEFINE_COMMAND_PLUGIN(coefBasicTest, "test command, accepts 3 optional string ar
 // OBSE plugin query
 extern "C" bool _declspec(dllexport) OBSEPlugin_Query(const OBSEInterface* obse, PluginInfo* info)
 {
-    // attach html-formatted log file to loader output handler  
-    gLog.AttachTarget(_gLogFile);     
+    // attach html-formatted log file to loader output handler
+    _gLogFile = new HTMLTarget( obse->isEditor  ? "Data\\obse\\plugins\\" SOLUTIONNAME "\\CS.log.html" : "Data\\obse\\plugins\\" SOLUTIONNAME "\\Game.log.html");
+    gLog.AttachTarget(*_gLogFile);     
 
 	// fill out plugin info structure
 	info->infoVersion = PluginInfo::kInfoVersion;   // info structure version
@@ -151,9 +152,8 @@ extern "C" bool _declspec(dllexport) OBSEPlugin_Query(const OBSEInterface* obse,
     // load submodule 
     // the submodule dll contains the actual "meat" of the plugin, or as much of it as is based on COEF
     // in this example, there are two different submodules to choose from (CS vs Game, see Submodule.cpp for details)
-    const char* modulename = obse->isEditor 
-                            ? "Data\\obse\\plugins\\" SOLUTIONNAME "\\Submodule.CS.dll" 
-                            : "Data\\obse\\plugins\\" SOLUTIONNAME "\\Submodule.Game.dll";
+    const char* modulename = obse->isEditor ? "Data\\obse\\plugins\\" SOLUTIONNAME "\\Submodule.CS.dll" 
+                                            : "Data\\obse\\plugins\\" SOLUTIONNAME "\\Submodule.Game.dll";
     _MESSAGE("Loading Submodule '%s' ...", modulename);
     g_hSubmodule = LoadLibrary(modulename);
     if (g_hSubmodule)
@@ -220,5 +220,16 @@ extern "C" bool _declspec(dllexport) OBSEPlugin_Load(const OBSEInterface * obse)
 // Windows dll load
 extern "C" BOOL WINAPI DllMain(HANDLE  hDllHandle, DWORD dwReason, LPVOID  lpreserved)
 {// called when plugin is loaded into process memory, before obse takes over
+    switch(dwReason)
+    {
+    case DLL_PROCESS_DETACH:    // dll unloaded 
+        // delete dynamically allocated log file target
+        if (_gLogFile)
+        {
+            gLog.DetachTarget(*_gLogFile);
+            delete _gLogFile;
+        }
+        break;
+    }   
 	return true;
 }

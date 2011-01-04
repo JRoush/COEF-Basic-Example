@@ -1,7 +1,6 @@
 /*
     Main unit for submodules.  Handles:
     -   Initialization (writing hooks & patches)
-    -   submodule debugging log
     -   Actual code (called by hooks)
 
     This example plugin has two submodule DLLs - one for the CS, and one for the game.  
@@ -16,17 +15,8 @@
 */
 
 /*--------------------------------------------------------------------------------------------*/
-// macro for strings that use "CS" or "Game" depending on compiler state
-#ifdef OBLIVION
-    #define TARGETNAME "Game"
-#else
-    #define TARGETNAME "CS"
-#endif
-
-/*--------------------------------------------------------------------------------------------*/
 // global debugging log for the submodule
-HTMLTarget _gLogFile("Data\\obse\\plugins\\" SOLUTIONNAME "\\" SOLUTIONNAME "." TARGETNAME ".log.html", SOLUTIONNAME "." TARGETNAME ".Log");
-OutputLog  _gLog;
+_declspec(dllimport) OutputLog _gLog;
 OutputLog& gLog = _gLog;
 
 /*--------------------------------------------------------------------------------------------*/
@@ -74,15 +64,12 @@ BOOL WINAPI DllMain(HANDLE hDllHandle, DWORD dwReason, LPVOID lpreserved)
     case DLL_PROCESS_ATTACH:    // dll loaded
         // get submodule handle, name
         hModule = (HMODULE)hDllHandle;
-        GetModuleFileName(hModule,sModuleName,sizeof(sModuleName));
-        // attach log file to output handler
-        gLog.AttachTarget(_gLogFile);        
+        GetModuleFileName(hModule,sModuleName,sizeof(sModuleName));        
         // done loading
         _MESSAGE("Attaching Submodule {%p} '%s' ...", hModule, sModuleName); 
         break;
     case DLL_PROCESS_DETACH:    // dll unloaded
         _MESSAGE("Detaching Submodule {%p} '%s' ...", hModule, sModuleName);      
-        gLog.DetachTarget(_gLogFile);
         break;
     }   
     return true;
@@ -96,9 +83,7 @@ public:
     {// dll loaded
         // get submodule handle, name
         hModule = m_hInstance;
-        GetModuleFileName(hModule,sModuleName,sizeof(sModuleName));
-        // attach log file to output handler
-        gLog.AttachTarget(_gLogFile);      
+        GetModuleFileName(hModule,sModuleName,sizeof(sModuleName));  
         // done loading
         _MESSAGE("Initializing Submodule {%p} '%s' ...", hModule, sModuleName); 
         return true;
@@ -106,7 +91,6 @@ public:
     virtual int ExitInstance() 
     {// dll unloaded
        _MESSAGE("Exiting Submodule {%p} '%s' ...", hModule, sModuleName);      
-        gLog.DetachTarget(_gLogFile);
        return CWinApp::ExitInstance();
     }
 } gApp;
