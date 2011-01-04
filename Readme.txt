@@ -1,3 +1,11 @@
+The 'COEF Basic Example' plugin demonstrates the following concepts for COEF projects:
+-   "1 loader, 2 submodule" project structure
+-   Loading ExportInjector to enable dynamic linking to Oblivion.exe & TESConstructionSet.exe
+-   Loading a submodule and communicating with it via LoadLibrary() and GetProcAddress()
+-   Separating the execution of script commands from the extraction & validation of arguments
+-   The basic layout for DllMain() & CWinApp
+-   Basic useage of the OutputLog utility
+
 Requirements for Developers:
 ============================
 1.  Common Oblivion Engine Framework
