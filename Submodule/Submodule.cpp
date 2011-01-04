@@ -20,16 +20,11 @@ _declspec(dllimport) OutputLog _gLog;
 OutputLog& gLog = _gLog;
 
 /*--------------------------------------------------------------------------------------------*/
-// global interfaces and handles
-HMODULE hModule = 0;    // windows module handle ("instance") for this dll
-char    sModuleName[0x100] = {{0}}; // name of this dll
-
-/*--------------------------------------------------------------------------------------------*/
 // submodule initialization
 extern "C" _declspec(dllexport) void Initialize()
 {   
     // begin initialization  
-    _MESSAGE("Initializing Submodule {%p} '%s' ...", hModule, sModuleName); 
+    _MESSAGE("Initializing Submodule ..."); 
 
     // ... Perform hooks & patches here
     
@@ -62,14 +57,10 @@ BOOL WINAPI DllMain(HANDLE hDllHandle, DWORD dwReason, LPVOID lpreserved)
     switch(dwReason)
     {
     case DLL_PROCESS_ATTACH:    // dll loaded
-        // get submodule handle, name
-        hModule = (HMODULE)hDllHandle;
-        GetModuleFileName(hModule,sModuleName,sizeof(sModuleName));        
-        // done loading
-        _MESSAGE("Attaching Submodule {%p} '%s' ...", hModule, sModuleName); 
+        _MESSAGE("Attaching Submodule ..."); 
         break;
     case DLL_PROCESS_DETACH:    // dll unloaded
-        _MESSAGE("Detaching Submodule {%p} '%s' ...", hModule, sModuleName);      
+        _MESSAGE("Detaching Submodule ...");      
         break;
     }   
     return true;
@@ -80,17 +71,13 @@ class CSubmoduleApp : public CWinApp
 {
 public:
     virtual BOOL InitInstance()
-    {// dll loaded
-        // get submodule handle, name
-        hModule = m_hInstance;
-        GetModuleFileName(hModule,sModuleName,sizeof(sModuleName));  
-        // done loading
-        _MESSAGE("Initializing Submodule {%p} '%s' ...", hModule, sModuleName); 
+    {// dll loaded       
+        _MESSAGE("Attaching Submodule ..."); 
         return true;
     }
     virtual int ExitInstance() 
     {// dll unloaded
-       _MESSAGE("Exiting Submodule {%p} '%s' ...", hModule, sModuleName);      
+       _MESSAGE("Detaching Submodule ...");      
        return CWinApp::ExitInstance();
     }
 } gApp;
