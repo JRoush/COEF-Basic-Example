@@ -17,7 +17,7 @@ Setup Instructions for Developers:
 1.  Extract the archive to a working directory for development
 2.  Open COEF_BasicExample.sln in a text editor and find the line beginning with
         Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "COEF"
-    Enter the path (relative or absolute) to COEF.vcproj, found in your COEF directory
+    Enter the path (relative or absolute) to COEF.vcproj, found in your COEF directory    
 3.  Open EnvPaths.vsprops in a text editor, and change the paths it contains:
         COEFPATH - the path (relative or absolute) of your COEF directory
         OBSEPATH - the path (relative or absolute) to the OBSE source code directory containing 'Common' and 'OBSE' subdirectories
@@ -25,3 +25,5 @@ Setup Instructions for Developers:
 4.  Create an Oblivion\Data\OBSE\Plugins\COEF_BasicExample folder
 5.  In your working directory, open COEF_BasicExample.sln in Visual Studio and begin development.  You may get an error the first time you
     compile the solution, compile it at least twice before troubleshooting.
+NOTE: you can change the name of your project, and the resulting plugin, by renaming COEF_BasicExample.sln.  Make sure that you create
+a corresponding folder for the output in Oblivion\Data\OBSE\Plugins\.
